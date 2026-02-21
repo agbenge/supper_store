@@ -49,7 +49,7 @@ class ShopOrdersListScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               itemCount: 10,
               itemBuilder: (context, index) {
-                return _buildOrderCard(
+                return _buildOrderCard(context,
                   '#ORD-2024-00${index + 1}',
                   index % 3 == 0 ? 'Pending' : 'Processing',
                   'Sarah Johnson',
@@ -86,14 +86,14 @@ class ShopOrdersListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderCard(String orderId, String status, String customer, String details, String time) {
+  Widget _buildOrderCard(BuildContext context,String orderId, String status, String customer, String details, String time) {
     Color statusColor = status == 'Pending' ? Colors.orange : Colors.blue;
     
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () {},
+        onTap: () => Navigator.pushNamed(context, '/payment_received_fulfilled'),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),

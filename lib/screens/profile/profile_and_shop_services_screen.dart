@@ -7,13 +7,15 @@ class ProfileAndShopServicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.pushNamed(context, '/profile_settings'),
+          ),
           TextButton(
-            onPressed: () {
-              // Handle edit
-            },
-            child: Row(
+            onPressed: () => Navigator.pushNamed(context, '/profile_details'),
+            child: const Row(
               children: [
                 Icon(Icons.edit, color: Colors.blue),
                 SizedBox(width: 4),
@@ -28,45 +30,48 @@ class ProfileAndShopServicesScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile Card
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 48,
-                          backgroundImage: NetworkImage(
-                            'https://lh3.googleusercontent.com/aida-public/AB6AXuDHvV04JeNG6NJBLyz_SkA39Zc55N9zqMGoV3cpq-DhxdESd1wDKdIoUijYA9jmBZshwZWdAjzYG_NkU-2BcbSQU4XA8R1nqGYILcnSAdlk-eX5RwLDoWo7oEKesNuCxNpXcLJv7m6ePwaSZoBbhqbJkyxzApXoEfmc_6Uzzpo-3hXu7YIxq2ueY6Y7at0ZDp8ij5GKAnRPGul-0ciiqoVDvg28CkePKDRkwKCY7hdx_6ECOebZlgkBXQax1_xDOnmT9lFa-8LaDfo',
+            InkWell(
+              onTap: () => Navigator.pushNamed(context, '/profile_details'),
+              borderRadius: BorderRadius.circular(24),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      const Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 48,
+                            backgroundImage: NetworkImage(
+                              'https://lh3.googleusercontent.com/aida-public/AB6AXuDHvV04JeNG6NJBLyz_SkA39Zc55N9zqMGoV3cpq-DhxdESd1wDKdIoUijYA9jmBZshwZWdAjzYG_NkU-2BcbSQU4XA8R1nqGYILcnSAdlk-eX5RwLDoWo7oEKesNuCxNpXcLJv7m6ePwaSZoBbhqbJkyxzApXoEfmc_6Uzzpo-3hXu7YIxq2ueY6Y7at0ZDp8ij5GKAnRPGul-0ciiqoVDvg28CkePKDRkwKCY7hdx_6ECOebZlgkBXQax1_xDOnmT9lFa-8LaDfo',
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundColor: Colors.blue,
-                            child: Icon(Icons.camera_alt, size: 12, color: Colors.white),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.blue,
+                              child: Icon(Icons.camera_alt, size: 12, color: Colors.white),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Alex Thompson',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      '+1 (555) 012-3456',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Alex Thompson',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '+1 (555) 012-3456',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -146,9 +151,7 @@ class ProfileAndShopServicesScreen extends StatelessWidget {
                 title: Text("Alex's Bakery"),
                 subtitle: Text('Fresh pastries & Pre-orders'),
                 trailing: Icon(Icons.chevron_right),
-                onTap: () {
-                  // Handle shop tap
-                },
+                onTap: () => Navigator.pushNamed(context, '/shop_management'),
               ),
             ),
             SizedBox(height: 12),
@@ -167,17 +170,13 @@ class ProfileAndShopServicesScreen extends StatelessWidget {
                 title: Text('Corner Coffee Hub'),
                 subtitle: Text('Artisan beans & Pickup'),
                 trailing: Icon(Icons.chevron_right),
-                onTap: () {
-                  // Handle shop tap
-                },
+                onTap: () => Navigator.pushNamed(context, '/shop_management'),
               ),
             ),
             SizedBox(height: 12),
             // Create New Shop Button
             ElevatedButton(
-              onPressed: () {
-                // Handle create new shop
-              },
+              onPressed: () => Navigator.pushNamed(context, '/shop_create_new'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,

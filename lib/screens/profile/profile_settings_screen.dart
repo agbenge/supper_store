@@ -31,7 +31,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               Icons.person_outline, 
               'Personal Information', 
               'Update your name and contact details',
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, '/profile_details'),
             ),
             _buildSettingTile(
               Icons.lock_outline, 

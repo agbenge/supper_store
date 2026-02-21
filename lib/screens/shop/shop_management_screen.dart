@@ -47,10 +47,34 @@ class ShopManagementScreen extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               children: [
-                _buildMetricCard('Today\'s Sales', '\$1,240', Icons.trending_up, Colors.green),
-                _buildMetricCard('Active Orders', '18', Icons.shopping_bag, Colors.blue),
-                _buildMetricCard('New Reviews', '4', Icons.star, Colors.orange),
-                _buildMetricCard('Low Stock', '12', Icons.warning_amber, Colors.red),
+                _buildMetricCard(
+                  'Today\'s Sales', 
+                  '\$1,240', 
+                  Icons.trending_up, 
+                  Colors.green,
+                  onTap: () => Navigator.pushNamed(context, '/shop_orders'),
+                ),
+                _buildMetricCard(
+                  'Active Orders', 
+                  '18', 
+                  Icons.shopping_bag, 
+                  Colors.blue,
+                  onTap: () => Navigator.pushNamed(context, '/shop_orders'),
+                ),
+                _buildMetricCard(
+                  'New Reviews', 
+                  '4', 
+                  Icons.star, 
+                  Colors.orange,
+                  onTap: () => Navigator.pushNamed(context, '/shop_review_summary'),
+                ),
+                _buildMetricCard(
+                  'Low Stock', 
+                  '12', 
+                  Icons.warning_amber, 
+                  Colors.red,
+                  onTap: () => Navigator.pushNamed(context, '/shop_inventory'),
+                ),
               ],
             ),
             const SizedBox(height: 24),
@@ -66,11 +90,16 @@ class ShopManagementScreen extends StatelessWidget {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildQuickAction('Add Item', Icons.add_box, Colors.blue),
-                  _buildQuickAction('View Orders', Icons.list_alt, Colors.green),
-                  _buildQuickAction('Expenses', Icons.receipt, Colors.purple),
-                  _buildQuickAction('Team', Icons.group, Colors.orange),
-                  _buildQuickAction('Reports', Icons.bar_chart, Colors.teal),
+                  _buildQuickAction('Add Item', Icons.add_box, Colors.blue, 
+                    onTap: () => Navigator.pushNamed(context, '/item_new_form')),
+                  _buildQuickAction('View Orders', Icons.list_alt, Colors.green, 
+                    onTap: () => Navigator.pushNamed(context, '/shop_orders')),
+                  _buildQuickAction('Expenses', Icons.receipt, Colors.purple, 
+                    onTap: () => Navigator.pushNamed(context, '/shop_expenses_list')),
+                  _buildQuickAction('Team', Icons.group, Colors.orange, 
+                    onTap: () => Navigator.pushNamed(context, '/shop_team_roles')),
+                  _buildQuickAction('Reports', Icons.bar_chart, Colors.teal, 
+                    onTap: () {}),
                 ],
               ),
             ),
@@ -85,7 +114,7 @@ class ShopManagementScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, '/shop_orders_list'),
                   child: const Text('View All'),
                 ),
               ],
@@ -101,65 +130,73 @@ class ShopManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricCard(String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: Colors.grey[100]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
-              ),
-              Icon(icon, color: color, size: 20),
-            ],
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ],
+  Widget _buildMetricCard(String title, String value, IconData icon, Color color, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(color: Colors.grey[100]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
+                ),
+                Icon(icon, color: color, size: 20),
+              ],
+            ),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildQuickAction(String title, IconData icon, Color color) {
-    return Container(
-      width: 80,
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+  Widget _buildQuickAction(String title, IconData icon, Color color, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 80,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color),
             ),
-            child: Icon(icon, color: color),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -58,9 +58,12 @@ class ShopOrdersScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Navigation Links
-            _buildNavLink('Active Orders', 'Manage orders in progress', Icons.pending_actions, Colors.orange),
-            _buildNavLink('Order History', 'View all past orders', Icons.history, Colors.blue),
-            _buildNavLink('Returns & Refunds', 'Manage customer issues', Icons.assignment_return, Colors.red),
+            _buildNavLink('Active Orders', 'Manage orders in progress', Icons.pending_actions, Colors.orange,
+              onTap: () => Navigator.pushNamed(context, '/shop_orders_list')),
+            _buildNavLink('Order History', 'View all past orders', Icons.history, Colors.blue,
+              onTap: () => Navigator.pushNamed(context, '/shop_orders_list')),
+            _buildNavLink('Returns & Refunds', 'Manage customer issues', Icons.assignment_return, Colors.red,
+              onTap: () {}),
             
             const SizedBox(height: 24),
 
@@ -73,7 +76,7 @@ class ShopOrdersScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, '/shop_orders_list'),
                   child: const Text('View List'),
                 ),
               ],
@@ -103,7 +106,7 @@ class ShopOrdersScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNavLink(String title, String subtitle, IconData icon, Color color) {
+  Widget _buildNavLink(String title, String subtitle, IconData icon, Color color, {VoidCallback? onTap}) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -119,7 +122,7 @@ class ShopOrdersScreen extends StatelessWidget {
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }

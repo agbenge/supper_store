@@ -73,7 +73,7 @@ class ShopInventoryScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => Navigator.pushNamed(context, '/item_new_form'),
         child: const Icon(Icons.add),
       ),
     );

@@ -66,7 +66,7 @@ class ShopTeamRolesScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () => Navigator.pushNamed(context, '/add_shop_staff_overlay'),
         label: const Text('Add Member'),
         icon: const Icon(Icons.person_add),
       ),

@@ -57,7 +57,7 @@ class ShopMoreScreen extends StatelessWidget {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.edit_note, color: Colors.blue),
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, '/edit_shop_profile'),
                   ),
                 ],
               ),
@@ -67,9 +67,12 @@ class ShopMoreScreen extends StatelessWidget {
 
             // Management Section
             _buildSectionTitle('Management'),
-            _buildMenuItem(Icons.inventory_2_outlined, 'Inventory Management', 'Manage products and stock levels'),
-            _buildMenuItem(Icons.people_outline, 'Team Roles', 'Manage staff and permissions'),
-            _buildMenuItem(Icons.analytics_outlined, 'Shop Performance', 'Sales and activity reports'),
+            _buildMenuItem(Icons.inventory_2_outlined, 'Inventory Management', 'Manage products and stock levels',
+              onTap: () => Navigator.pushNamed(context, '/shop_inventory')),
+            _buildMenuItem(Icons.people_outline, 'Team Roles', 'Manage staff and permissions',
+              onTap: () => Navigator.pushNamed(context, '/shop_team_roles')),
+            _buildMenuItem(Icons.analytics_outlined, 'Shop Performance', 'Sales and activity reports',
+              onTap: () => Navigator.pushNamed(context, '/shop_orders')),
             
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -78,8 +81,10 @@ class ShopMoreScreen extends StatelessWidget {
 
             // Financial Section
             _buildSectionTitle('Financial'),
-            _buildMenuItem(Icons.receipt_long_outlined, 'All Expenses', 'Log and view shop spending'),
-            _buildMenuItem(Icons.payments_outlined, 'Payout Details', 'Manage bank accounts and transfers'),
+            _buildMenuItem(Icons.receipt_long_outlined, 'All Expenses', 'Log and view shop spending',
+              onTap: () => Navigator.pushNamed(context, '/shop_expenses_list')),
+            _buildMenuItem(Icons.payments_outlined, 'Payout Details', 'Manage bank accounts and transfers',
+              onTap: () {}),
             
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -88,8 +93,10 @@ class ShopMoreScreen extends StatelessWidget {
 
             // Settings Section
             _buildSectionTitle('Settings'),
-            _buildMenuItem(Icons.settings_outlined, 'Shop Settings', 'Operational hours and preferences'),
-            _buildMenuItem(Icons.help_outline, 'Support & FAQ', 'Get help with shop management'),
+            _buildMenuItem(Icons.settings_outlined, 'Shop Settings', 'Operational hours and preferences',
+              onTap: () => Navigator.pushNamed(context, '/edit_shop_profile')),
+            _buildMenuItem(Icons.help_outline, 'Support & FAQ', 'Get help with shop management',
+              onTap: () {}),
             
             const SizedBox(height: 40),
             
@@ -125,7 +132,7 @@ class ShopMoreScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, String subtitle) {
+  Widget _buildMenuItem(IconData icon, String title, String subtitle, {VoidCallback? onTap}) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: Container(
@@ -145,7 +152,7 @@ class ShopMoreScreen extends StatelessWidget {
         style: TextStyle(fontSize: 12, color: Colors.grey[500]),
       ),
       trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
