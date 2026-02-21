@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/shop_inventory/provider.dart';
+import '../../view_model/shop_inventory/state.dart';
 
-class ShopInventoryScreen extends StatelessWidget {
+class ShopInventoryScreen extends ConsumerWidget {
   const ShopInventoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(shopInventoryViewModelProvider);
+    final viewModel = ref.read(shopInventoryViewModelProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -33,11 +39,14 @@ class ShopInventoryScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  _buildFilterTab('All Items', true),
-                  _buildFilterTab('Low Stock', false),
-                  _buildFilterTab('Out of Stock', false),
-                  _buildFilterTab('Categories', false),
-                ],
+                  'All Items',
+                  'Low Stock',
+                  'Out of Stock',
+                  'Categories'
+                ].map((filter) => InkWell(
+                  onTap: () => viewModel.setFilter(filter),
+                  child: _buildFilterTab(filter, viewModelState.selectedFilter == filter),
+                )).toList(),
               ),
             ),
           ),
@@ -47,9 +56,9 @@ class ShopInventoryScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                _buildSummaryCard('Total Items', '124', Colors.blue),
+                _buildSummaryCard('Total Items', viewModelState.totalItems.toString(), Colors.blue),
                 const SizedBox(width: 12),
-                _buildSummaryCard('Low Stock', '12', Colors.orange),
+                _buildSummaryCard('Low Stock', viewModelState.lowStockCount.toString(), Colors.orange),
               ],
             ),
           ),
@@ -58,14 +67,15 @@ class ShopInventoryScreen extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: 8,
+              itemCount: viewModelState.items.length,
               itemBuilder: (context, index) {
+                final item = viewModelState.items[index];
                 return _buildInventoryItem(
-                  'Premium Coffee Beans',
-                  'Category: Beverages',
-                  '45 units',
-                  '\$12.50',
-                  index % 3 == 0 ? Colors.orange : Colors.green,
+                  item.title,
+                  'Category: ${item.category}',
+                  item.stock,
+                  item.price,
+                  item.isLowStock ? Colors.orange : Colors.green,
                 );
               },
             ),

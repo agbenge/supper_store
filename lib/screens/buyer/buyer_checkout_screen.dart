@@ -1,192 +1,111 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/buyer_checkout/provider.dart';
+import '../../view_model/buyer_checkout/state.dart';
 
-class BuyerCheckoutScreen extends StatelessWidget {
+class BuyerCheckoutScreen extends ConsumerWidget {
   const BuyerCheckoutScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(buyerCheckoutViewModelProvider);
+    final viewModel = ref.read(buyerCheckoutViewModelProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {},
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Checkout'),
+        title: const Text('Checkout'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Review Summary', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
+            const Text('Review Summary', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.store, color: Colors.blue),
-                SizedBox(width: 8),
-                Text('TechHaven Electronics', style: TextStyle(fontWeight: FontWeight.w600)),
+                const Icon(Icons.store, color: Colors.blue),
+                const SizedBox(width: 8),
+                Text(viewModelState.shopName, style: const TextStyle(fontWeight: FontWeight.w600)),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Your Items', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                const Text('Your Items', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(12)),
-                  child: Text('2 Items', style: TextStyle(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold)),
+                  child: Text('${viewModelState.items.length} Items', style: const TextStyle(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
+            ...viewModelState.items.map((item) => _buildCartItemCard(item)),
+            const SizedBox(height: 16),
+            const Text('Pickup Information', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+            const SizedBox(height: 8),
             Card(
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: NetworkImage('https://via.placeholder.com/80'), // Placeholder
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
+                    const Icon(Icons.schedule, color: Colors.blue),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Pro-Wireless X1', style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text('\$199.99', style: TextStyle(fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          Text('Midnight Blue Edition', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                          SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Qty: 1', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                              TextButton(onPressed: () {}, child: Text('Edit', style: TextStyle(color: Colors.blue))),
-                            ],
-                          ),
+                          Text(viewModelState.pickupTimeSlot, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(viewModelState.pickupStatus, style: const TextStyle(color: Colors.grey, fontSize: 10)),
                         ],
                       ),
                     ),
+                    TextButton(onPressed: viewModel.changePickupTime, child: const Text('Change', style: TextStyle(color: Colors.blue))),
                   ],
                 ),
               ),
             ),
+            const SizedBox(height: 16),
             Card(
               child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: NetworkImage('https://via.placeholder.com/80'), // Placeholder
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('SwiftRun Sneakers', style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text('\$89.50', style: TextStyle(fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          Text('Size 10.5 • Sport White', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                          SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Qty: 1', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                              TextButton(onPressed: () {}, child: Text('Edit', style: TextStyle(color: Colors.blue))),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text('Pickup Information', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
-            SizedBox(height: 8),
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Icon(Icons.schedule, color: Colors.blue),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Today, 4:30 PM - 5:00 PM', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Ready for pickup in 45 mins', style: TextStyle(color: Colors.grey, fontSize: 10)),
-                        ],
-                      ),
-                    ),
-                    TextButton(onPressed: () {}, child: Text('Change', style: TextStyle(color: Colors.blue))),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal', style: TextStyle(color: Colors.grey)),
-                        Text('\$289.49', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('Subtotal', style: TextStyle(color: Colors.grey)),
+                        Text(viewModelState.subtotal, style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
-                    SizedBox(height: 8),
-                    Row(
+                    const SizedBox(height: 8),
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Pre-order Fee', style: TextStyle(color: Colors.grey)),
                         Text('FREE', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Tax', style: TextStyle(color: Colors.grey)),
-                        Text('\$12.45', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text('Tax', style: TextStyle(color: Colors.grey)),
+                        Text(viewModelState.tax, style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
-                    Divider(),
+                    const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total Amount', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text('\$301.94', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue)),
+                        const Text('Total Amount', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text(viewModelState.total, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue)),
                       ],
                     ),
                   ],
@@ -197,7 +116,7 @@ class BuyerCheckoutScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(top: BorderSide(color: Colors.grey[200]!)),
@@ -206,20 +125,20 @@ class BuyerCheckoutScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.blue[50],
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info, color: Colors.blue),
-                  SizedBox(width: 12),
+                  const Icon(Icons.info, color: Colors.blue),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Pay at Shop upon arrival', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
+                        const Text('Pay at Shop upon arrival', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
                         Text('Payment will be handled at the counter during pickup.', style: TextStyle(color: Colors.blue[600], fontSize: 10)),
                       ],
                     ),
@@ -227,20 +146,68 @@ class BuyerCheckoutScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: viewModel.confirmOrder,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Confirm Pre-order'),
                   SizedBox(width: 8),
                   Icon(Icons.arrow_forward),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCartItemCard(CartItem item) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                image: DecorationImage(
+                  image: NetworkImage(item.imageUrl),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(item.price, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Text(item.edition, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Qty: ${item.quantity}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      TextButton(onPressed: () {}, child: const Text('Edit', style: TextStyle(color: Colors.blue))),
+                    ],
+                  ),
                 ],
               ),
             ),

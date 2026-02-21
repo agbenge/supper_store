@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/profile_details/provider.dart';
 
-class ProfileDetailsScreen extends StatelessWidget {
+class ProfileDetailsScreen extends ConsumerWidget {
   const ProfileDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(profileDetailsViewModelProvider);
+    final viewModel = ref.read(profileDetailsViewModelProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -15,7 +20,7 @@ class ProfileDetailsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
-            onPressed: () {},
+            onPressed: viewModel.editProfile,
           ),
         ],
       ),
@@ -34,28 +39,29 @@ class ProfileDetailsScreen extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 50,
-                        backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                        backgroundImage: NetworkImage(viewModelState.profileImageUrl),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                          child: const Icon(Icons.verified, color: Colors.blue, size: 24),
+                      if (viewModelState.isVerified)
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                            child: const Icon(Icons.verified, color: Colors.blue, size: 24),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'John Doe',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  Text(
+                    viewModelState.fullName.split(' ').first, // Simplified name for header
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Member since Jan 2024',
+                    'Member since ${viewModelState.memberSince}',
                     style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
                 ],
@@ -68,12 +74,12 @@ class ProfileDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailItem('Full Name', 'Johnathan Quency Doe', Icons.person_outline),
-                  _buildDetailItem('Email Address', 'john.doe@example.com', Icons.email_outlined),
-                  _buildDetailItem('Phone Number', '+234 801 234 5678', Icons.phone_android_outlined),
-                  _buildDetailItem('Default Delivery Address', '123 Business Way, Lagos Island, Lagos State', Icons.location_on_outlined),
-                  _buildDetailItem('Gender', 'Male', Icons.wc_outlined),
-                  _buildDetailItem('Date of Birth', 'October 15, 1990', Icons.cake_outlined),
+                  _buildDetailItem('Full Name', viewModelState.fullName, Icons.person_outline),
+                  _buildDetailItem('Email Address', viewModelState.email, Icons.email_outlined),
+                  _buildDetailItem('Phone Number', viewModelState.phone, Icons.phone_android_outlined),
+                  _buildDetailItem('Default Delivery Address', viewModelState.address, Icons.location_on_outlined),
+                  _buildDetailItem('Gender', viewModelState.gender, Icons.wc_outlined),
+                  _buildDetailItem('Date of Birth', viewModelState.dob, Icons.cake_outlined),
                   
                   const SizedBox(height: 32),
                   
@@ -85,25 +91,36 @@ class ProfileDetailsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.green[50],
+                      color: viewModelState.isVerified ? Colors.green[50] : Colors.amber[50],
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.green[100]!),
+                      border: Border.all(color: viewModelState.isVerified ? Colors.green[100]! : Colors.amber[100]!),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.check_circle, color: Colors.green),
-                        SizedBox(width: 12),
+                        Icon(
+                          viewModelState.isVerified ? Icons.check_circle : Icons.pending, 
+                          color: viewModelState.isVerified ? Colors.green : Colors.amber,
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Identity Verified',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                                viewModelState.isVerified ? 'Identity Verified' : 'Verification Pending',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold, 
+                                  color: viewModelState.isVerified ? Colors.green : Colors.amber[900],
+                                ),
                               ),
                               Text(
-                                'Your account has been verified for high-value transactions.',
-                                style: TextStyle(fontSize: 12, color: Colors.green),
+                                viewModelState.isVerified 
+                                  ? 'Your account has been verified for high-value transactions.'
+                                  : 'Complete your registration to access all features.',
+                                style: TextStyle(
+                                  fontSize: 12, 
+                                  color: viewModelState.isVerified ? Colors.green : Colors.amber[900],
+                                ),
                               ),
                             ],
                           ),

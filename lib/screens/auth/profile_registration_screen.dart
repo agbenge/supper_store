@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/profile_registration/provider.dart';
 
-class ProfileRegistrationScreen extends StatefulWidget {
+class ProfileRegistrationScreen extends ConsumerStatefulWidget {
   const ProfileRegistrationScreen({super.key});
 
   @override
-  State<ProfileRegistrationScreen> createState() => _ProfileRegistrationScreenState();
+  ConsumerState<ProfileRegistrationScreen> createState() => _ProfileRegistrationScreenState();
 }
 
-class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
+class _ProfileRegistrationScreenState extends ConsumerState<ProfileRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -18,14 +20,26 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
   final _permanentLgaController = TextEditingController();
   final _permanentAddressController = TextEditingController();
 
-  String? _currentCountry;
-  String? _permanentCountry;
-  bool _sameAsCurrent = false;
-
   final List<String> _countries = ['Select Country', 'United States', 'Nigeria', 'United Kingdom'];
 
   @override
+  void initState() {
+    super.initState();
+    // Initialize controllers if needed or sync them
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final viewModelState = ref.watch(profileRegistrationViewModelProvider);
+    final viewModel = ref.read(profileRegistrationViewModelProvider.notifier);
+
+    // Sync controllers if sameAsCurrent is toggled
+    if (viewModelState.sameAsCurrent) {
+      _permanentStateController.text = _currentStateController.text;
+      _permanentLgaController.text = _currentLgaController.text;
+      _permanentAddressController.text = _currentAddressController.text;
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -69,7 +83,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                           bottom: 0,
                           right: 0,
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
                               shape: BoxShape.circle,
@@ -123,6 +137,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                       children: [
                         TextFormField(
                           controller: _emailController,
+                          onChanged: viewModel.setEmail,
                           decoration: const InputDecoration(
                             labelText: 'Email Address',
                             hintText: 'email@example.com',
@@ -133,6 +148,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                         const Divider(),
                         TextFormField(
                           controller: _phoneController,
+                          onChanged: viewModel.setPhone,
                           decoration: const InputDecoration(
                             labelText: 'Phone Number',
                             hintText: '+1 (555) 000-0000',
@@ -174,7 +190,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                     child: Column(
                       children: [
                         DropdownButtonFormField<String>(
-                          initialValue: _currentCountry,
+                          value: viewModelState.currentCountry,
                           decoration: const InputDecoration(
                             labelText: 'Country',
                             border: InputBorder.none,
@@ -185,11 +201,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                               child: Text(country),
                             );
                           }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _currentCountry = value;
-                            });
-                          },
+                          onChanged: viewModel.setCurrentCountry,
                         ),
                         const Divider(),
                         Row(
@@ -197,6 +209,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                             Expanded(
                               child: TextFormField(
                                 controller: _currentStateController,
+                                onChanged: viewModel.setCurrentState,
                                 decoration: const InputDecoration(
                                   labelText: 'State',
                                   hintText: 'Lagos',
@@ -208,6 +221,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                             Expanded(
                               child: TextFormField(
                                 controller: _currentLgaController,
+                                onChanged: viewModel.setCurrentLga,
                                 decoration: const InputDecoration(
                                   labelText: 'LGA',
                                   hintText: 'Ikeja',
@@ -220,6 +234,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                         const Divider(),
                         TextFormField(
                           controller: _currentAddressController,
+                          onChanged: viewModel.setCurrentAddress,
                           decoration: const InputDecoration(
                             labelText: 'Full Address',
                             hintText: '123 Street Name, Area',
@@ -259,18 +274,8 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                           ),
                         ),
                         Switch(
-                          value: _sameAsCurrent,
-                          onChanged: (value) {
-                            setState(() {
-                              _sameAsCurrent = value;
-                              if (value) {
-                                _permanentCountry = _currentCountry;
-                                _permanentStateController.text = _currentStateController.text;
-                                _permanentLgaController.text = _currentLgaController.text;
-                                _permanentAddressController.text = _currentAddressController.text;
-                              }
-                            });
-                          },
+                          value: viewModelState.sameAsCurrent,
+                          onChanged: viewModel.setSameAsCurrent,
                         ),
                       ],
                     ),
@@ -289,7 +294,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                     child: Column(
                       children: [
                         DropdownButtonFormField<String>(
-                          initialValue: _permanentCountry,
+                          value: viewModelState.permanentCountry,
                           decoration: const InputDecoration(
                             labelText: 'Country',
                             border: InputBorder.none,
@@ -300,11 +305,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                               child: Text(country),
                             );
                           }).toList(),
-                          onChanged: _sameAsCurrent ? null : (value) {
-                            setState(() {
-                              _permanentCountry = value;
-                            });
-                          },
+                          onChanged: viewModelState.sameAsCurrent ? null : viewModel.setPermanentCountry,
                         ),
                         const Divider(),
                         Row(
@@ -312,24 +313,26 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                             Expanded(
                               child: TextFormField(
                                 controller: _permanentStateController,
+                                onChanged: viewModel.setPermanentState,
                                 decoration: const InputDecoration(
                                   labelText: 'State',
                                   hintText: 'Oyo',
                                   border: InputBorder.none,
                                 ),
-                                enabled: !_sameAsCurrent,
+                                enabled: !viewModelState.sameAsCurrent,
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: TextFormField(
                                 controller: _permanentLgaController,
+                                onChanged: viewModel.setPermanentLga,
                                 decoration: const InputDecoration(
                                   labelText: 'LGA',
                                   hintText: 'Ibadan',
                                   border: InputBorder.none,
                                 ),
-                                enabled: !_sameAsCurrent,
+                                enabled: !viewModelState.sameAsCurrent,
                               ),
                             ),
                           ],
@@ -337,13 +340,14 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                         const Divider(),
                         TextFormField(
                           controller: _permanentAddressController,
+                          onChanged: viewModel.setPermanentAddress,
                           decoration: const InputDecoration(
                             labelText: 'Full Address',
                             hintText: 'Permanent Street Address',
                             border: InputBorder.none,
                           ),
                           maxLines: 2,
-                          enabled: !_sameAsCurrent,
+                          enabled: !viewModelState.sameAsCurrent,
                         ),
                       ],
                     ),
@@ -361,7 +365,7 @@ class _ProfileRegistrationScreenState extends State<ProfileRegistrationScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // Handle form submission
+                            viewModel.submit();
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Registration submitted')),
                             );

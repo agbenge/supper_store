@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/shop_management/provider.dart';
+import '../../view_model/shop_management/state.dart';
 
-class ShopManagementScreen extends StatelessWidget {
+class ShopManagementScreen extends ConsumerWidget {
   const ShopManagementScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(shopManagementViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shop Management'),
@@ -22,109 +27,116 @@ class ShopManagementScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Section
-            const Text(
-              'Welcome back, John!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Here\'s what\'s happening with GreenLeaf today.',
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 24),
-
-            // Metrics Grid
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              childAspectRatio: 1.5,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              children: [
-                _buildMetricCard(
-                  'Today\'s Sales', 
-                  '\$1,240', 
-                  Icons.trending_up, 
-                  Colors.green,
-                  onTap: () => Navigator.pushNamed(context, '/shop_orders'),
-                ),
-                _buildMetricCard(
-                  'Active Orders', 
-                  '18', 
-                  Icons.shopping_bag, 
-                  Colors.blue,
-                  onTap: () => Navigator.pushNamed(context, '/shop_orders'),
-                ),
-                _buildMetricCard(
-                  'New Reviews', 
-                  '4', 
-                  Icons.star, 
-                  Colors.orange,
-                  onTap: () => Navigator.pushNamed(context, '/shop_review_summary'),
-                ),
-                _buildMetricCard(
-                  'Low Stock', 
-                  '12', 
-                  Icons.warning_amber, 
-                  Colors.red,
-                  onTap: () => Navigator.pushNamed(context, '/shop_inventory'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Quick Actions
-            const Text(
-              'Quick Actions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+      body: RefreshIndicator(
+        onRefresh: () {
+         ref.read(shopManagementViewModelProvider.notifier).refresh();
+         return Future.value();
+      },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Welcome Section
+              Text(
+                'Welcome back, ${viewModelState.ownerName}!',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Here\'s what\'s happening with ${viewModelState.shopName} today.',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 24),
+  
+              // Metrics Grid
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                childAspectRatio: 1.5,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
                 children: [
-                  _buildQuickAction('Add Item', Icons.add_box, Colors.blue, 
-                    onTap: () => Navigator.pushNamed(context, '/item_new_form')),
-                  _buildQuickAction('View Orders', Icons.list_alt, Colors.green, 
-                    onTap: () => Navigator.pushNamed(context, '/shop_orders')),
-                  _buildQuickAction('Expenses', Icons.receipt, Colors.purple, 
-                    onTap: () => Navigator.pushNamed(context, '/shop_expenses_list')),
-                  _buildQuickAction('Team', Icons.group, Colors.orange, 
-                    onTap: () => Navigator.pushNamed(context, '/shop_team_roles')),
-                  _buildQuickAction('Reports', Icons.bar_chart, Colors.teal, 
-                    onTap: () {}),
+                  _buildMetricCard(
+                    'Today\'s Sales', 
+                    '\$${viewModelState.todaySales.toStringAsFixed(0)}', 
+                    Icons.trending_up, 
+                    Colors.green,
+                    onTap: () => Navigator.pushNamed(context, '/shop_orders'),
+                  ),
+                  _buildMetricCard(
+                    'Active Orders', 
+                    viewModelState.activeOrders.toString(), 
+                    Icons.shopping_bag, 
+                    Colors.blue,
+                    onTap: () => Navigator.pushNamed(context, '/shop_orders'),
+                  ),
+                  _buildMetricCard(
+                    'New Reviews', 
+                    viewModelState.newReviews.toString(), 
+                    Icons.star, 
+                    Colors.orange,
+                    onTap: () => Navigator.pushNamed(context, '/shop_review_summary'),
+                  ),
+                  _buildMetricCard(
+                    'Low Stock', 
+                    viewModelState.lowStockCount.toString(), 
+                    Icons.warning_amber, 
+                    Colors.red,
+                    onTap: () => Navigator.pushNamed(context, '/shop_inventory'),
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-
-            // Recent Activity Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Recent Activity',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              const SizedBox(height: 24),
+  
+              // Quick Actions
+              const Text(
+                'Quick Actions',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 100,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildQuickAction('Add Item', Icons.add_box, Colors.blue, 
+                      onTap: () => Navigator.pushNamed(context, '/item_new_form')),
+                    _buildQuickAction('View Orders', Icons.list_alt, Colors.green, 
+                      onTap: () => Navigator.pushNamed(context, '/shop_orders')),
+                    _buildQuickAction('Expenses', Icons.receipt, Colors.purple, 
+                      onTap: () => Navigator.pushNamed(context, '/shop_expenses_list')),
+                    _buildQuickAction('Team', Icons.group, Colors.orange, 
+                      onTap: () => Navigator.pushNamed(context, '/shop_team_roles')),
+                    _buildQuickAction('Reports', Icons.bar_chart, Colors.teal, 
+                      onTap: () {}),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/shop_orders_list'),
-                  child: const Text('View All'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _buildActivityItem('Order #1234 fulfilled', '2 mins ago', Icons.check_circle, Colors.green),
-            _buildActivityItem('New review from Sarah', '15 mins ago', Icons.rate_review, Colors.blue),
-            _buildActivityItem('Stock alert: Coffee Beans', '1 hour ago', Icons.error, Colors.red),
-            _buildActivityItem('Expense logged: Electricity', '3 hours ago', Icons.payment, Colors.purple),
-          ],
+              ),
+              const SizedBox(height: 24),
+  
+              // Recent Activity Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Recent Activity',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/shop_orders_list'),
+                    child: const Text('View All'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildActivityItem('Order #1234 fulfilled', '2 mins ago', Icons.check_circle, Colors.green),
+              _buildActivityItem('New review from Sarah', '15 mins ago', Icons.rate_review, Colors.blue),
+              _buildActivityItem('Stock alert: Coffee Beans', '1 hour ago', Icons.error, Colors.red),
+              _buildActivityItem('Expense logged: Electricity', '3 hours ago', Icons.payment, Colors.purple),
+            ],
+          ),
         ),
       ),
     );

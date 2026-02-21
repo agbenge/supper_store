@@ -1,149 +1,150 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/buyer_home_discovery/provider.dart';
+import '../../view_model/buyer_home_discovery/state.dart';
 
-class BuyerHomeDiscoveryScreen extends StatelessWidget {
+class BuyerHomeDiscoveryScreen extends ConsumerWidget {
   const BuyerHomeDiscoveryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(buyerHomeDiscoveryViewModelProvider);
+    final viewModel = ref.read(buyerHomeDiscoveryViewModelProvider.notifier);
+
     return Scaffold(
-      body:Column(
-
-            children: [
-        // Header
-        Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
+      body: Column(
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
-                IconButton(
-                  icon: Icon(Icons.shopping_cart),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(Icons.notifications, color: Colors.blue),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            // Search bar
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: Colors.blue),
-                hintText: 'Search for shops or items',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.tune),
-                  onPressed: () {},
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      // Categories
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Categories',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text('See All', style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        ),
-      ),
-
-              SizedBox(
-                height: 100,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                Row(
                   children: [
-                    _buildCategoryItem('Tech', Icons.devices),
-                    _buildCategoryItem('Fashion', Icons.checkroom),
-                    _buildCategoryItem('Grocery', Icons.shopping_basket),
-                    _buildCategoryItem('Health', Icons.medical_services),
-                    _buildCategoryItem('Pets', Icons.pets),
+                    IconButton(
+                      icon: const Icon(Icons.shopping_cart),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.notifications, color: Colors.blue),
+                      onPressed: () {},
+                    ),
                   ],
                 ),
-              ),
-          Expanded(child:
-          SingleChildScrollView(
-            child:  Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Trending Pre-orders
-                Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Trending Pre-orders',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 250,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    children: [
-                      _buildTrendingItem(context, 'Pro-Wireless X1', 'TechHaven Electronics', '\$199.99', 'Hot Now'),
-                      _buildTrendingItem(context, 'SwiftRun Sneakers', 'Urban Kicks', '\$89.50', 'Fast Selling'),
-                    ],
-                  ),
-                ),
-                // Nearby Shops
-                Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Nearby Shops',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Row(
-                        children: [
-                          Chip(label: Text('Nearby'), backgroundColor: Colors.blue[50]),
-                          SizedBox(width: 8),
-                          Text('Popular', style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    children: [
-                      _buildShopItem('GreenLeaf Groceries', 'Fresh produce & Essentials', '4.8', '0.8 km'),
-                      _buildShopItem('TechHaven', 'Premium Gadgets & Gear', '4.9', '1.2 km'),
-                      _buildShopItem('Urban Kicks', 'Streetwear & Footwear', '4.6', '2.5 km'),
-                    ],
+                const SizedBox(height: 16),
+                // Search bar
+                TextField(
+                  onChanged: viewModel.updateSearch,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search, color: Colors.blue),
+                    hintText: 'Search for shops or items',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.tune),
+                      onPressed: () {},
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),)
+          ),
+          // Categories
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Categories',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('See All', style: TextStyle(color: Colors.blue)),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 100,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: viewModelState.categories.length,
+              itemBuilder: (context, index) {
+                final category = viewModelState.categories[index];
+                return _buildCategoryItem(category.name, category.icon);
+              },
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Trending Pre-orders
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Trending Pre-orders',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 250,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      itemCount: viewModelState.trendingItems.length,
+                      itemBuilder: (context, index) {
+                        final item = viewModelState.trendingItems[index];
+                        return _buildTrendingItem(context, item.title, item.shopName, item.price, item.badge);
+                      },
+                    ),
+                  ),
+                  // Nearby Shops
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Nearby Shops',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Chip(label: const Text('Nearby'), backgroundColor: Colors.blue[50]),
+                            const SizedBox(width: 8),
+                            const Text('Popular', style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: viewModelState.nearbyShops.map((shop) => 
+                        _buildShopItem(shop.name, shop.description, shop.rating, shop.distance)
+                      ).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
-      )
-
-
+      ),
     );
   }
 
   Widget _buildCategoryItem(String name, IconData icon) {
     return Container(
       width: 70,
-      margin: EdgeInsets.only(right: 16),
+      margin: const EdgeInsets.only(right: 16),
       child: Column(
         children: [
           Container(
@@ -155,8 +156,8 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
             ),
             child: Icon(icon, color: Colors.blue, size: 32),
           ),
-          SizedBox(height: 8),
-          Text(name, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Text(name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -165,7 +166,7 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
   Widget _buildTrendingItem(BuildContext context, String title, String subtitle, String price, String badge) {
     return Container(
       width: 280,
-      margin: EdgeInsets.only(right: 16),
+      margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -181,42 +182,42 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   color: Colors.grey[300], // Placeholder
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                 ),
-                child: Center(child: Text('Image')),
+                child: const Center(child: Text('Image')),
               ),
               Positioned(
                 top: 8,
                 left: 8,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     badge,
-                    style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(price, style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                    Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(price, style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                   ],
                 ),
-                SizedBox(height: 4),
-                Text(subtitle, style: TextStyle(color: Colors.grey, fontSize: 12)),
-                SizedBox(height: 16),
+                const SizedBox(height: 4),
+                Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/buyer_view_item');
@@ -224,7 +225,7 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.flash_on, size: 16),
@@ -243,8 +244,8 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
 
   Widget _buildShopItem(String name, String desc, String rating, String distance) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -259,9 +260,9 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
               color: Colors.grey[300], // Placeholder
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(child: Text('Image')),
+            child: const Center(child: Text('Image')),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,37 +270,37 @@ class BuyerHomeDiscoveryScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.blue, size: 14),
-                        Text(rating, style: TextStyle(color: Colors.blue, fontSize: 12)),
+                        const Icon(Icons.star, color: Colors.blue, size: 14),
+                        Text(rating, style: const TextStyle(color: Colors.blue, fontSize: 12)),
                       ],
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
-                Text(desc, style: TextStyle(color: Colors.grey, fontSize: 12)),
-                SizedBox(height: 8),
+                const SizedBox(height: 4),
+                Text(desc, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.location_on, color: Colors.blue, size: 12),
-                          SizedBox(width: 4),
-                          Text(distance, style: TextStyle(fontSize: 10)),
+                          const Icon(Icons.location_on, color: Colors.blue, size: 12),
+                          const SizedBox(width: 4),
+                          Text(distance, style: const TextStyle(fontSize: 10)),
                         ],
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_forward, color: Colors.blue),
+                      icon: const Icon(Icons.arrow_forward, color: Colors.blue),
                       onPressed: () {},
                     ),
                   ],

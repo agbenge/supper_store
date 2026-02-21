@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/profile_settings/provider.dart';
 
-class ProfileSettingsScreen extends StatefulWidget {
+class ProfileSettingsScreen extends ConsumerWidget {
   const ProfileSettingsScreen({super.key});
 
   @override
-  State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(profileSettingsViewModelProvider);
+    final viewModel = ref.read(profileSettingsViewModelProvider.notifier);
 
-class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
-  bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
-  bool _locationEnabled = true;
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -53,22 +49,22 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               Icons.notifications_none, 
               'Push Notifications', 
               'Receive alerts about your orders',
-              _notificationsEnabled,
-              (value) => setState(() => _notificationsEnabled = value),
+              viewModelState.notificationsEnabled,
+              viewModel.setNotificationsEnabled,
             ),
             _buildSwitchTile(
               Icons.dark_mode_outlined, 
               'Dark Mode', 
               'Switch between light and dark themes',
-              _darkModeEnabled,
-              (value) => setState(() => _darkModeEnabled = value),
+              viewModelState.darkModeEnabled,
+              viewModel.setDarkModeEnabled,
             ),
             _buildSwitchTile(
               Icons.location_on_outlined, 
               'Location Services', 
               'Enable for better shop discovery',
-              _locationEnabled,
-              (value) => setState(() => _locationEnabled = value),
+              viewModelState.locationEnabled,
+              viewModel.setLocationEnabled,
             ),
 
             const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: Divider()),
@@ -82,7 +78,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: viewModel.logout,
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 54),
                   foregroundColor: Colors.red,

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/shop_review_summary/provider.dart';
+import '../../view_model/shop_review_summary/state.dart';
 
-class ShopReviewSummaryScreen extends StatelessWidget {
+class ShopReviewSummaryScreen extends ConsumerWidget {
   const ShopReviewSummaryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(shopReviewSummaryViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -39,31 +44,33 @@ class ShopReviewSummaryScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    '4.8',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                  Text(
+                    viewModelState.averageRating.toStringAsFixed(1),
+                    style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(5, (index) {
-                      return Icon(
-                        index < 4 ? Icons.star : Icons.star_half,
-                        color: Colors.amber,
-                        size: 24,
-                      );
+                      final rating = viewModelState.averageRating;
+                      if (index < rating.floor()) {
+                        return const Icon(Icons.star, color: Colors.amber, size: 24);
+                      } else if (index < rating && rating % 1 != 0) {
+                        return const Icon(Icons.star_half, color: Colors.amber, size: 24);
+                      } else {
+                        return const Icon(Icons.star_border, color: Colors.amber, size: 24);
+                      }
                     }),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Based on 124 reviews',
+                    'Based on ${viewModelState.totalReviews} reviews',
                     style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
                   const SizedBox(height: 24),
-                  _buildRatingBar(5, 0.85),
-                  _buildRatingBar(4, 0.10),
-                  _buildRatingBar(3, 0.03),
-                  _buildRatingBar(2, 0.01),
-                  _buildRatingBar(1, 0.01),
+                  ...[5, 4, 3, 2, 1].map((stars) {
+                    final percentage = viewModelState.ratingDistribution[stars] ?? 0.0;
+                    return _buildRatingBar(stars, percentage);
+                  }),
                 ],
               ),
             ),
@@ -74,9 +81,7 @@ class ShopReviewSummaryScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _buildReviewItem('Sarah J.', 'Great service and fresh produce! Always reliable.', 'Today', 5),
-            _buildReviewItem('Michael R.', 'Fast pickup, but the packaging could be better.', 'Yesterday', 4),
-            _buildReviewItem('Emily D.', 'Perfect as always. Highly recommend the coffee beans.', '2 days ago', 5),
+            ...viewModelState.recentReviews.map((review) => _buildReviewItem(review)),
             
             const SizedBox(height: 20),
             Center(
@@ -130,7 +135,7 @@ class ShopReviewSummaryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewItem(String author, String comment, String date, int rating) {
+  Widget _buildReviewItem(ShopReview review) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -144,8 +149,8 @@ class ShopReviewSummaryScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(author, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(date, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+              Text(review.author, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(review.date, style: TextStyle(color: Colors.grey[500], fontSize: 12)),
             ],
           ),
           const SizedBox(height: 6),
@@ -153,14 +158,14 @@ class ShopReviewSummaryScreen extends StatelessWidget {
             children: List.generate(5, (index) {
               return Icon(
                 Icons.star,
-                color: index < rating ? Colors.amber : Colors.grey[300],
+                color: index < review.rating ? Colors.amber : Colors.grey[300],
                 size: 14,
               );
             }),
           ),
           const SizedBox(height: 8),
           Text(
-            comment,
+            review.comment,
             style: TextStyle(color: Colors.grey[800], fontSize: 14, height: 1.4),
           ),
         ],

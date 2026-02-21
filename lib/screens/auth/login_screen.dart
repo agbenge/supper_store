@@ -1,56 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/login/provider.dart';
+import '../../view_model/login/state.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final loginState = ref.watch(loginViewModelProvider);
+    final loginViewModel = ref.read(loginViewModelProvider.notifier);
+
+    // Listen for success or error
+    ref.listen<LoginViewModelState>(loginViewModelProvider, (previous, next) {
+      if (next.status == LoginStatus.success) {
+        Navigator.pushReplacementNamed(context, '/buyer_home_discovery');
+      } else if (next.status == LoginStatus.error && next.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.errorMessage!), backgroundColor: Colors.red),
+        );
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {
-            // Navigate back
-          },
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 32),
-            Text(
+            const SizedBox(height: 32),
+            const Text(
               'Welcome Back',
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Please enter your details to sign in to your account.',
               style: TextStyle(color: Colors.grey[600]),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Email or Phone Number',
-                prefixIcon: Icon(Icons.mail),
+                prefixIcon: const Icon(Icons.mail),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextFormField(
-              obscureText: true,
+              obscureText: loginState.obscurePassword,
               decoration: InputDecoration(
                 labelText: 'Password',
-                prefixIcon: Icon(Icons.lock),
+                prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.visibility),
-                  onPressed: () {
-                    // Toggle visibility
-                  },
+                  icon: Icon(loginState.obscurePassword ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () => loginViewModel.togglePasswordVisibility(),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -61,52 +74,53 @@ class LoginScreen extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {},
-                child: Text('Forgot Password?'),
+                child: const Text('Forgot Password?'),
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/buyer_home_discovery');
-              },
+              onPressed: loginState.status == LoginStatus.loading 
+                ? null 
+                : () => loginViewModel.login('user@example.com', 'password'),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: Text('Login'),
+              child: loginState.status == LoginStatus.loading
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                : const Text('Login'),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Row(
               children: [
-                Expanded(child: Divider()),
+                const Expanded(child: Divider()),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'Or continue with',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ),
-                Expanded(child: Divider()),
+                const Expanded(child: Divider()),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Placeholder for Google icon
                         Text('G'),
                         SizedBox(width: 8),
                         Text('Google'),
@@ -114,17 +128,17 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.apple),
@@ -136,13 +150,13 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 64),
+            const SizedBox(height: 64),
             Center(
               child: TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/register');
                 },
-                child: Text("Don't have an account? Register"),
+                child: const Text("Don't have an account? Register"),
               ),
             ),
           ],

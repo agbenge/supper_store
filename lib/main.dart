@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/buyer/home_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/buyer/buyer_home_discovery_screen.dart';
@@ -26,8 +27,14 @@ import 'screens/buyer/buyer_order_summary_screen.dart';
 import 'screens/shop/payment_received_fulfilled_screen.dart';
 import 'screens/shop/item_new_form_screen.dart';
 
+import 'screens/main_navigation_screen.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,8 +49,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const MainNavigationScreen(),
       routes: { 
+        '/main': (context) => const MainNavigationScreen(),
         '/buyer_home_discovery': (context) => const BuyerHomeDiscoveryScreen(),
         '/login': (context) => const LoginScreen(),
         '/buyer_view_item': (context) => const BuyerViewItemScreen(),

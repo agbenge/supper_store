@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/shop_profile_view/provider.dart';
+import '../../view_model/shop_profile_view/state.dart';
 
-class ShopProfileViewScreen extends StatelessWidget {
+class ShopProfileViewScreen extends ConsumerWidget {
   const ShopProfileViewScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(shopProfileViewViewModelProvider);
+    final viewModel = ref.read(shopProfileViewViewModelProvider.notifier);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -13,11 +19,14 @@ class ShopProfileViewScreen extends StatelessWidget {
             expandedHeight: 200.0,
             floating: false,
             pinned: true,
-            leading: CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(0.8),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.of(context).pop(),
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.white.withOpacity(0.8),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -25,7 +34,7 @@ class ShopProfileViewScreen extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   Image.network(
-                    'https://via.placeholder.com/800x400?text=GreenLeaf+Banner',
+                    viewModelState.bannerUrl,
                     fit: BoxFit.cover,
                   ),
                   Container(
@@ -66,9 +75,9 @@ class ShopProfileViewScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'GreenLeaf Groceries',
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      Text(
+                        viewModelState.shopName,
+                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -76,9 +85,9 @@ class ShopProfileViewScreen extends StatelessWidget {
                           color: Colors.green[50],
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Text(
-                          'OPEN',
-                          style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12),
+                        child: Text(
+                          viewModelState.status,
+                          style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       ),
                     ],
@@ -88,28 +97,28 @@ class ShopProfileViewScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 18),
                       const SizedBox(width: 4),
-                      const Text('4.8', style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(viewModelState.rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(width: 4),
-                      Text('(124 reviews)', style: TextStyle(color: Colors.grey[600])),
+                      Text('(${viewModelState.reviewCount} reviews)', style: TextStyle(color: Colors.grey[600])),
                       const SizedBox(width: 12),
                       const Icon(Icons.location_on, color: Colors.blue, size: 18),
                       const SizedBox(width: 4),
-                      Text('2.5 km away', style: TextStyle(color: Colors.grey[600])),
+                      Text(viewModelState.distance, style: TextStyle(color: Colors.grey[600])),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Fresh organic produce direct from local farms. We specialize in seasonal vegetables, exotic fruits, and artisanal dairy products.',
-                    style: TextStyle(fontSize: 15, height: 1.5, color: Colors.grey),
+                  Text(
+                    viewModelState.description,
+                    style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.grey),
                   ),
                   const SizedBox(height: 24),
                   
                   // Pickup & Delivery Info
                   Row(
                     children: [
-                      _buildInfoIcon(Icons.timer_outlined, '15-20 min', 'Pickup'),
+                      _buildInfoIcon(Icons.timer_outlined, viewModelState.pickupTime, 'Pickup'),
                       const SizedBox(width: 12),
-                      _buildInfoIcon(Icons.shopping_bag_outlined, 'No min order', 'Terms'),
+                      _buildInfoIcon(Icons.shopping_bag_outlined, viewModelState.deliveryTerms, 'Terms'),
                     ],
                   ),
                   const Divider(height: 48),
@@ -135,10 +144,10 @@ class ShopProfileViewScreen extends StatelessWidget {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final categories = ['Vegetables', 'Fruits', 'Dairy', 'Bakery', 'Meat', 'Beverages'];
-                  return _buildCategoryCard(categories[index]);
+                  final category = viewModelState.categories[index];
+                  return _buildCategoryCard(category);
                 },
-                childCount: 6,
+                childCount: viewModelState.categories.length,
               ),
             ),
           ),
@@ -155,7 +164,7 @@ class ShopProfileViewScreen extends StatelessWidget {
           ],
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: viewModel.startShopping,
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 54),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

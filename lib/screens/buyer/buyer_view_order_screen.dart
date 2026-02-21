@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/buyer_view_order/provider.dart';
+import '../../view_model/buyer_view_order/state.dart';
 
-class BuyerViewOrderScreen extends StatelessWidget {
+class BuyerViewOrderScreen extends ConsumerWidget {
   const BuyerViewOrderScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(buyerViewOrderViewModelProvider);
+    final viewModel = ref.read(buyerViewOrderViewModelProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Order #TRK-88291'),
+        title: Text('Order #${viewModelState.orderId}'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
                     Container(
@@ -29,38 +35,38 @@ class BuyerViewOrderScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         image: DecorationImage(
-                          image: NetworkImage('https://via.placeholder.com/48'), // Placeholder
+                          image: NetworkImage(viewModelState.shopImageUrl),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('GreenLeaf Groceries', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('124 Market St, San Francisco, CA', style: TextStyle(color: Colors.grey, fontSize: 12)),
-                          SizedBox(height: 12),
+                          Text(viewModelState.shopName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(viewModelState.shopAddress, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
                               OutlinedButton.icon(
-                                onPressed: () {},
-                                icon: Icon(Icons.navigation, size: 16),
-                                label: Text('Directions', style: TextStyle(fontSize: 11)),
+                                onPressed: viewModel.getDirections,
+                                icon: const Icon(Icons.navigation, size: 16),
+                                label: const Text('Directions', style: TextStyle(fontSize: 11)),
                                 style: OutlinedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  shape: StadiumBorder(),
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  shape: const StadiumBorder(),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               OutlinedButton.icon(
-                                onPressed: () {},
-                                icon: Icon(Icons.phone, size: 16),
-                                label: Text('Contact', style: TextStyle(fontSize: 11)),
+                                onPressed: viewModel.contactShop,
+                                icon: const Icon(Icons.phone, size: 16),
+                                label: const Text('Contact', style: TextStyle(fontSize: 11)),
                                 style: OutlinedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  shape: StadiumBorder(),
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  shape: const StadiumBorder(),
                                 ),
                               ),
                             ],
@@ -72,28 +78,23 @@ class BuyerViewOrderScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Card(
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildStep('Order Placed', Icons.check, true),
-                        _buildStep('Confirmed', Icons.check, true),
-                        _buildStep('Packed', Icons.inventory_2, true),
-                        _buildStep('Ready', Icons.hail, true, isActive: true),
-                      ],
+                      children: viewModelState.steps.map((step) => _buildStep(step)).toList(),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Container(
                       height: 2,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Colors.blue, Colors.blue, Colors.blue, Colors.grey],
-                          stops: [0.0, 0.75, 0.75, 1.0],
+                          colors: [Colors.blue, Colors.blue, Colors.blue.withOpacity(0.3), Colors.grey[300]!],
+                          stops: [0.0, viewModelState.progress, viewModelState.progress, 1.0],
                         ),
                       ),
                     ),
@@ -101,64 +102,62 @@ class BuyerViewOrderScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Card(
               child: Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: Column(
                   children: [
-                    Text('Verification QR Code', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 8),
-                    Text('Show this to the shop assistant to verify your order', style: TextStyle(color: Colors.grey)),
-                    SizedBox(height: 32),
+                    const Text('Verification QR Code', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    const Text('Show this to the shop assistant to verify your order', style: TextStyle(color: Colors.grey)),
+                    const SizedBox(height: 32),
                     Container(
-                      padding: EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(24),
-                        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
                       ),
                       child: Image.network(
-                        'https://via.placeholder.com/192', // Placeholder for QR
+                        viewModelState.qrCodeUrl,
                         width: 192,
                         height: 192,
                       ),
                     ),
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       decoration: BoxDecoration(
                         color: Colors.blue[50],
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        '882-A91',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue, letterSpacing: 4),
+                        viewModelState.verificationCode,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue, letterSpacing: 4),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Card(
               color: Colors.grey[50],
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Summary', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
-                    SizedBox(height: 16),
-                    _buildItem('1x', 'Organic Avocados (3pk)', '\$8.50'),
-                    _buildItem('2x', 'Whole Grain Bread', '\$11.00'),
-                    _buildItem('1x', 'Oat Milk 1L', '\$4.25'),
-                    Divider(),
+                    const Text('Summary', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+                    const SizedBox(height: 16),
+                    ...viewModelState.items.map((item) => _buildItem(item)),
+                    const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total Amount', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
-                        Text('\$23.75', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue)),
+                        const Text('Total Amount', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                        Text(viewModelState.totalAmount, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue)),
                       ],
                     ),
                   ],
@@ -169,7 +168,7 @@ class BuyerViewOrderScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(top: BorderSide(color: Colors.grey[200]!)),
@@ -178,15 +177,15 @@ class BuyerViewOrderScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.blue[50],
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info, color: Colors.blue),
-                  SizedBox(width: 12),
+                  const Icon(Icons.info, color: Colors.blue),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Please ensure you have received all items before tapping the confirmation button. This action is final and will process your payment.',
@@ -196,15 +195,15 @@ class BuyerViewOrderScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: viewModel.confirmPickup,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
-                padding: EdgeInsets.symmetric(vertical: 18),
+                padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.verified_user),
@@ -219,26 +218,30 @@ class BuyerViewOrderScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStep(String label, IconData icon, bool completed, {bool isActive = false}) {
+  Widget _buildStep(OrderStep step) {
     return Column(
       children: [
         Container(
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: completed ? Colors.blue : Colors.grey,
+            color: step.completed ? Colors.blue : Colors.grey[300],
             shape: BoxShape.circle,
-            boxShadow: isActive ? [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 8)] : null,
+            boxShadow: step.isActive ? [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 8)] : null,
           ),
-          child: Icon(icon, color: Colors.white, size: 16),
+          child: Icon(
+            step.completed ? Icons.check : Icons.circle, 
+            color: step.completed ? Colors.white : Colors.grey[400], 
+            size: 16,
+          ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
-          label,
+          step.label,
           style: TextStyle(
             fontSize: 9,
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            color: isActive ? Colors.blue : Colors.grey,
+            fontWeight: step.isActive ? FontWeight.bold : FontWeight.normal,
+            color: step.isActive ? Colors.blue : Colors.grey,
           ),
           textAlign: TextAlign.center,
         ),
@@ -246,20 +249,20 @@ class BuyerViewOrderScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(String qty, String name, String price) {
+  Widget _buildItem(OrderItem item) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              Text(qty, style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-              SizedBox(width: 12),
-              Text(name, style: TextStyle(fontWeight: FontWeight.w500)),
+              Text(item.qty, style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+              const SizedBox(width: 12),
+              Text(item.name, style: const TextStyle(fontWeight: FontWeight.w500)),
             ],
           ),
-          Text(price, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(item.price, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );

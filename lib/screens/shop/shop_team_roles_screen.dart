@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/shop_team_roles/provider.dart';
+import '../../view_model/shop_team_roles/state.dart';
 
-class ShopTeamRolesScreen extends StatelessWidget {
+class ShopTeamRolesScreen extends ConsumerWidget {
   const ShopTeamRolesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModelState = ref.watch(shopTeamRolesViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -46,9 +51,7 @@ class ShopTeamRolesScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildTeamMemberTile('John Doe (You)', 'Owner', true),
-            _buildTeamMemberTile('Alice Smith', 'Manager', false),
-            _buildTeamMemberTile('Bob Wilson', 'Sales Assistant', false),
+            ...viewModelState.teamMembers.map((member) => _buildTeamMemberTile(member)),
             
             const SizedBox(height: 32),
 
@@ -57,9 +60,7 @@ class ShopTeamRolesScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildRoleDescription('Owner', 'Full access to all shop features and financial settings.', Icons.admin_panel_settings),
-            _buildRoleDescription('Manager', 'Can manage inventory, staff, and view reports.', Icons.manage_accounts),
-            _buildRoleDescription('Sales Assistant', 'Can process orders and manage basic inventory.', Icons.point_of_sale),
+            ...viewModelState.availableRoles.map((role) => _buildRoleDescription(role)),
             
             const SizedBox(height: 40),
           ],
@@ -73,21 +74,21 @@ class ShopTeamRolesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTeamMemberTile(String name, String role, bool isCurrentUser) {
+  Widget _buildTeamMemberTile(TeamMember member) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: isCurrentUser ? Colors.blue : Colors.grey[200],
+          backgroundColor: member.isCurrentUser ? Colors.blue : Colors.grey[200],
           child: Text(
-            name[0],
-            style: TextStyle(color: isCurrentUser ? Colors.white : Colors.black87),
+            member.name[0],
+            style: TextStyle(color: member.isCurrentUser ? Colors.white : Colors.black87),
           ),
         ),
-        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(role, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-        trailing: isCurrentUser 
+        title: Text(member.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(member.role, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+        trailing: member.isCurrentUser 
           ? null 
           : IconButton(
               icon: const Icon(Icons.more_vert),
@@ -97,7 +98,7 @@ class ShopTeamRolesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRoleDescription(String role, String description, IconData icon) {
+  Widget _buildRoleDescription(ShopRole role) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Row(
@@ -109,7 +110,7 @@ class ShopTeamRolesScreen extends StatelessWidget {
               color: Colors.grey[100],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: Colors.blue, size: 20),
+            child: Icon(role.icon, color: Colors.blue, size: 20),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -117,11 +118,11 @@ class ShopTeamRolesScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  role,
+                  role.title,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
-                  description,
+                  role.description,
                   style: TextStyle(color: Colors.grey[600], fontSize: 13),
                 ),
               ],
