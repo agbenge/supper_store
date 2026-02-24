@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/login/provider.dart';
 
 class ShopMoreHubScreen extends ConsumerWidget {
   const ShopMoreHubScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loginNotifier = ref.read(loginViewModelProvider.notifier);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('More', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+        title: const Text(
+          'More',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -30,26 +36,54 @@ class ShopMoreHubScreen extends ConsumerWidget {
             _buildSectionTitle('ADMINISTRATIVE'),
             const SizedBox(height: 12),
             _buildActionCard([
-              _buildActionItem(Icons.store, 'View My Shops', 'Manage shop profiles & locations'),
-              _buildActionItem(Icons.analytics, 'Business Performance', 'Analytics, reports and insights'),
-              _buildActionItem(Icons.people, 'Manage Team', 'Staff list and active sessions'),
-              _buildActionItem(Icons.security, 'Security & Roles', 'Permissions and access control'),
-              _buildActionItem(Icons.exit_to_app, 'Exit Shop Mode', 'Switch back to buyer view'),
+              _buildActionItem(
+                Icons.store,
+                'View My Shops',
+                'Manage shop profiles & locations',
+              ),
+              _buildActionItem(
+                Icons.analytics,
+                'Business Performance',
+                'Analytics, reports and insights',
+              ),
+              _buildActionItem(
+                Icons.people,
+                'Manage Team',
+                'Staff list and active sessions',
+              ),
+              _buildActionItem(
+                Icons.security,
+                'Security & Roles',
+                'Permissions and access control',
+              ),
+              _buildActionItem(
+                Icons.exit_to_app,
+                'Exit Shop Mode',
+                'Switch back to buyer view',
+                onTap: () {
+                  loginNotifier.enterBuyerMode();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home',
+                    (route) => false,
+                  );
+                },
+              ),
             ]),
             const SizedBox(height: 32),
             _buildSectionTitle('GLOBAL STATUS'),
             const SizedBox(height: 12),
             _buildStatusCard([
               _buildStatusItem(
-                Icons.power_settings_new, 
-                'All Shops Online', 
+                Icons.power_settings_new,
+                'All Shops Online',
                 'Accepting orders across all branches',
                 true,
                 Colors.green,
               ),
               _buildStatusItem(
-                Icons.block, 
-                'Disable Shop Access', 
+                Icons.block,
+                'Disable Shop Access',
                 'Emergency lockdown for all owners',
                 false,
                 Colors.red,
@@ -66,16 +100,29 @@ class ShopMoreHubScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  loginNotifier.logout();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home',
+                    (route) => false,
+                  );
+                },
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   side: BorderSide(color: Colors.grey[200]!),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   backgroundColor: Colors.white,
                 ),
                 child: const Text(
                   'Sign Out',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
@@ -132,7 +179,12 @@ class ShopMoreHubScreen extends ConsumerWidget {
     return result;
   }
 
-  Widget _buildActionItem(IconData icon, String title, String subtitle) {
+  Widget _buildActionItem(
+    IconData icon,
+    String title,
+    String subtitle, {
+    VoidCallback? onTap,
+  }) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       leading: Container(
@@ -143,14 +195,26 @@ class ShopMoreHubScreen extends ConsumerWidget {
         ),
         child: Icon(icon, color: Colors.blue),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      subtitle: Text(subtitle, style: TextStyle(color: Colors.blueGrey[300], fontSize: 13)),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(color: Colors.blueGrey[300], fontSize: 13),
+      ),
       trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 
-  Widget _buildStatusItem(IconData icon, String title, String subtitle, bool status, Color iconColor) {
+  Widget _buildStatusItem(
+    IconData icon,
+    String title,
+    String subtitle,
+    bool status,
+    Color iconColor,
+  ) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       leading: Container(
@@ -161,8 +225,14 @@ class ShopMoreHubScreen extends ConsumerWidget {
         ),
         child: Icon(icon, color: iconColor),
       ),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      subtitle: Text(subtitle, style: TextStyle(color: Colors.blueGrey[300], fontSize: 13)),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(color: Colors.blueGrey[300], fontSize: 13),
+      ),
       trailing: Switch(
         value: status,
         onChanged: (value) {},

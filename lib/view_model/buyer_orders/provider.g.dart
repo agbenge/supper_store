@@ -6,25 +6,60 @@ part of 'provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(BuyerOrdersViewModel)
+final buyerOrdersViewModelProvider = BuyerOrdersViewModelProvider._();
+
+final class BuyerOrdersViewModelProvider
+    extends $NotifierProvider<BuyerOrdersViewModel, BuyerOrdersViewModelState> {
+  BuyerOrdersViewModelProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'buyerOrdersViewModelProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$buyerOrdersViewModelHash();
+
+  @$internal
+  @override
+  BuyerOrdersViewModel create() => BuyerOrdersViewModel();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BuyerOrdersViewModelState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BuyerOrdersViewModelState>(value),
+    );
+  }
+}
+
 String _$buyerOrdersViewModelHash() =>
     r'f5eb4790dcb4195d008bacadd84d7b65d55ed196';
 
-/// See also [BuyerOrdersViewModel].
-@ProviderFor(BuyerOrdersViewModel)
-final buyerOrdersViewModelProvider =
-    AutoDisposeNotifierProvider<
-      BuyerOrdersViewModel,
-      BuyerOrdersViewModelState
-    >.internal(
-      BuyerOrdersViewModel.new,
-      name: r'buyerOrdersViewModelProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$buyerOrdersViewModelHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$BuyerOrdersViewModel = AutoDisposeNotifier<BuyerOrdersViewModelState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$BuyerOrdersViewModel
+    extends $Notifier<BuyerOrdersViewModelState> {
+  BuyerOrdersViewModelState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref as $Ref<BuyerOrdersViewModelState, BuyerOrdersViewModelState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<BuyerOrdersViewModelState, BuyerOrdersViewModelState>,
+              BuyerOrdersViewModelState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

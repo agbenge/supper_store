@@ -1,0 +1,51 @@
+Analyzing store...                                              
+
+warning • Unused import: 'view_model/cart/state.dart' • lib/main.dart:3:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/auth/profile_registration_screen.dart:92:55 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/screens/auth/profile_registration_screen.dart:193:27 • deprecated_member_use
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/screens/auth/profile_registration_screen.dart:297:27 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_order_summary_screen.dart:42:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_shop_shopping_screen.dart:90:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_shop_shopping_screen.dart:92:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_shop_shopping_screen.dart:251:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_shopping_cart_screen.dart:65:40 • deprecated_member_use
+warning • Unused import: '../../view_model/buyer_view_item/state.dart' • lib/screens/buyer/buyer_view_item_screen.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_item_screen.dart:254:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_item_screen.dart:256:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_item_screen.dart:267:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_item_screen.dart:269:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_item_screen.dart:287:37 • deprecated_member_use
+   info • Unnecessary 'const' keyword • lib/screens/buyer/buyer_view_item_screen.dart:334:27 • unnecessary_const
+   info • Unnecessary 'const' keyword • lib/screens/buyer/buyer_view_item_screen.dart:335:27 • unnecessary_const
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_order_screen.dart:96:74 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/buyer/buyer_view_order_screen.dart:230:70 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/screens/buyer/profile_settings_screen.dart:134:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/create_shop_profile_screen.dart:40:63 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/edit_shop_profile_screen.dart:50:63 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/payment_received_fulfilled_screen.dart:52:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_advance_controls_screen.dart:68:59 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_complete_order_screen.dart:21:42 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_expenses_list_screen.dart:117:36 • deprecated_member_use
+warning • Unused import: '../../view_model/shop_inventory/state.dart' • lib/screens/shop/shop_inventory_screen.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_inventory_screen.dart:119:24 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_inventory_screen.dart:121:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_inventory_screen.dart:193:45 • deprecated_member_use
+warning • Unused import: '../../view_model/shop_management/state.dart' • lib/screens/shop/shop_management_screen.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_management_screen.dart:156:35 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_management_screen.dart:199:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_management_screen.dart:224:28 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_more_hub_screen.dart:223:28 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/screens/shop/shop_more_hub_screen.dart:239:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_orders_list_screen.dart:113:42 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_orders_screen.dart:117:26 • deprecated_member_use
+warning • Unused import: '../../view_model/shop_profile_view/state.dart' • lib/screens/shop/shop_profile_view_screen.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_profile_view_screen.dart:25:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_profile_view_screen.dart:46:40 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_profile_view_screen.dart:48:40 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_profile_view_screen.dart:58:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_profile_view_screen.dart:163:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screens/shop/shop_review_summary_screen.dart:34:41 • deprecated_member_use
+warning • Unused import: 'package:store/data/api_service.dart' • lib/view_model/buyer_shop_shopping/provider.dart:3:8 • unused_import
+  error • Target of URI hasn't been generated: 'package:store/view_model/cart/state.g.dart' • lib/view_model/cart/state.dart:1:6 • uri_has_not_been_generated
+
+47 issues found. (ran in 1.2s)

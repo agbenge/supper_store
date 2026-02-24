@@ -1,0 +1,12 @@
+{
+    "name": "mock-server",
+    "version": "1.0.0",
+    "description": "Json-server for testing",
+    "main": "start.js",
+    "scripts": {
+        "start": "node start.js"
+    },
+    "dependencies": {
+        "json-server": "^0.17.4"
+    }
+}

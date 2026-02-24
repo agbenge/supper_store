@@ -14,10 +14,14 @@ class LoginScreen extends ConsumerWidget {
     // Listen for success or error
     ref.listen<LoginViewModelState>(loginViewModelProvider, (previous, next) {
       if (next.status == LoginStatus.success) {
-        Navigator.pushReplacementNamed(context, '/buyer_home_discovery');
-      } else if (next.status == LoginStatus.error && next.errorMessage != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else if (next.status == LoginStatus.error &&
+          next.errorMessage != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage!), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(next.errorMessage!),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     });
@@ -62,7 +66,11 @@ class LoginScreen extends ConsumerWidget {
                 labelText: 'Password',
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
-                  icon: Icon(loginState.obscurePassword ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                    loginState.obscurePassword
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
                   onPressed: () => loginViewModel.togglePasswordVisibility(),
                 ),
                 border: OutlineInputBorder(
@@ -79,9 +87,9 @@ class LoginScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: loginState.status == LoginStatus.loading 
-                ? null 
-                : () => loginViewModel.login('user@example.com', 'password'),
+              onPressed: loginState.status == LoginStatus.loading
+                  ? null
+                  : () => loginViewModel.login('user@example.com', 'password'),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
@@ -89,8 +97,12 @@ class LoginScreen extends ConsumerWidget {
                 ),
               ),
               child: loginState.status == LoginStatus.loading
-                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Text('Login'),
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Login'),
             ),
             const SizedBox(height: 32),
             Row(
@@ -120,11 +132,7 @@ class LoginScreen extends ConsumerWidget {
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('G'),
-                        SizedBox(width: 8),
-                        Text('Google'),
-                      ],
+                      children: [Text('G'), SizedBox(width: 8), Text('Google')],
                     ),
                   ),
                 ),

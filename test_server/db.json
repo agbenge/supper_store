@@ -1,0 +1,87 @@
+{
+    "users": [
+        {
+            "id": "1",
+            "username": "raph",
+            "password": "1234",
+            "email": "raph@example.com",
+            "fullName": "Raphael Gbenge",
+            "isShop": false
+        },
+        {
+            "id": "2",
+            "username": "shop_user",
+            "password": "password",
+            "email": "shop@example.com",
+            "fullName": "Organic Shop Owner",
+            "isShop": true,
+            "shopId": "shop1"
+        }
+    ],
+    "categories": [
+        {
+            "id": "1",
+            "name": "Vegetables",
+            "icon": "eco"
+        },
+        {
+            "id": "2",
+            "name": "Fruits",
+            "icon": "shopping_basket"
+        },
+        {
+            "id": "3",
+            "name": "Dairy",
+            "icon": "water_drop"
+        },
+        {
+            "id": "4",
+            "name": "Bakery",
+            "icon": "bakery_dining"
+        }
+    ],
+    "shops": [
+        {
+            "id": "shop1",
+            "name": "Organic Greens",
+            "description": "Premium organic produce and more",
+            "rating": "4.8",
+            "distance": "0.5 km",
+            "imageUrl": "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=400&auto=format&fit=crop"
+        },
+        {
+            "id": "shop2",
+            "name": "Fresh Harvest",
+            "description": "Direct from local farmers",
+            "rating": "4.5",
+            "distance": "1.2 km",
+            "imageUrl": "https://images.unsplash.com/photo-1516594798947-e65505dbb29d?q=80&w=400&auto=format&fit=crop"
+        }
+    ],
+    "items": [
+        {
+            "id": "item1",
+            "shopId": "shop1",
+            "title": "Organic Gala Apples",
+            "price": 4.50,
+            "badge": "Gala",
+            "imageUrl": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?q=80&w=400&auto=format&fit=crop"
+        },
+        {
+            "id": "item2",
+            "shopId": "shop1",
+            "title": "Fresh Whole Milk",
+            "price": 3.20,
+            "badge": "Dairy",
+            "imageUrl": "https://images.unsplash.com/photo-1550583724-125581cc255b?q=80&w=400&auto=format&fit=crop"
+        },
+        {
+            "id": "item3",
+            "shopId": "shop2",
+            "title": "Artisan Sourdough",
+            "price": 6.75,
+            "badge": "Freshly Baked",
+            "imageUrl": "https://images.unsplash.com/photo-1585478259715-876a6a81bc08?q=80&w=400&auto=format&fit=crop"
+        }
+    ]
+}

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class OrdersNotSigninScreen extends StatelessWidget {
-  const OrdersNotSigninScreen({super.key});
+class ProfileNotSigninScreen extends StatelessWidget {
+  const ProfileNotSigninScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Orders')),
+      appBar: AppBar(title: const Text('Profile')),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 32),
-            // Large icon with overlays
+            const SizedBox(height: 32),
+            // Large icon with overlays (similar to OrdersNotSigninScreen)
             Stack(
               alignment: Alignment.center,
               children: [
@@ -32,7 +32,7 @@ class OrdersNotSigninScreen extends StatelessWidget {
                       ),
                       child: Center(
                         child: Icon(
-                          Icons.receipt_long,
+                          Icons.person,
                           size: 100,
                           color: Colors.blue[400],
                         ),
@@ -44,53 +44,56 @@ class OrdersNotSigninScreen extends StatelessWidget {
                   top: 16,
                   right: 16,
                   child: Container(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(color: Colors.black12, blurRadius: 8),
                       ],
                       border: Border.all(color: Colors.grey[200]!),
                     ),
-                    child: Icon(Icons.notifications, color: Colors.blue),
+                    child: const Icon(
+                      Icons.settings_outlined,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
                 Positioned(
                   bottom: 40,
                   left: 0,
                   child: Container(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(color: Colors.black12, blurRadius: 8),
                       ],
                       border: Border.all(color: Colors.grey[200]!),
                     ),
-                    child: Icon(Icons.timer, color: Colors.blue),
+                    child: const Icon(Icons.star_outline, color: Colors.blue),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  Text(
-                    'Track your pre-orders',
+                  const Text(
+                    'Manage your profile',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    'Sign in to view your active pre-orders, order history, and pickup statuses.',
+                    'Sign in to manage your addresses, view your shop services, and update your personal information.',
                     style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/login');
@@ -98,12 +101,12 @@ class OrdersNotSigninScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Text('Login'),
+                    child: const Text('Login'),
                   ),
                   const SizedBox(height: 12),
                   OutlinedButton(
@@ -112,70 +115,18 @@ class OrdersNotSigninScreen extends StatelessWidget {
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue, width: 2),
-                      minimumSize: Size(double.infinity, 50),
+                      side: const BorderSide(color: Colors.blue, width: 2),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Text('Create Account'),
+                    child: const Text('Create Account'),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 32),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.help_outline,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Need help?',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'Visit our support center',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(Icons.chevron_right, color: Colors.grey[400]),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
           ],
         ),
       ),

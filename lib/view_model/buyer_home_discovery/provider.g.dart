@@ -6,26 +6,74 @@ part of 'provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$buyerHomeDiscoveryViewModelHash() =>
-    r'bf665e0e5295d25d35f2cf39080af85a776128ca';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [BuyerHomeDiscoveryViewModel].
 @ProviderFor(BuyerHomeDiscoveryViewModel)
 final buyerHomeDiscoveryViewModelProvider =
-    AutoDisposeNotifierProvider<
-      BuyerHomeDiscoveryViewModel,
-      BuyerHomeDiscoveryViewModelState
-    >.internal(
-      BuyerHomeDiscoveryViewModel.new,
-      name: r'buyerHomeDiscoveryViewModelProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$buyerHomeDiscoveryViewModelHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+    BuyerHomeDiscoveryViewModelProvider._();
 
-typedef _$BuyerHomeDiscoveryViewModel =
-    AutoDisposeNotifier<BuyerHomeDiscoveryViewModelState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class BuyerHomeDiscoveryViewModelProvider
+    extends
+        $NotifierProvider<
+          BuyerHomeDiscoveryViewModel,
+          BuyerHomeDiscoveryViewModelState
+        > {
+  BuyerHomeDiscoveryViewModelProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'buyerHomeDiscoveryViewModelProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$buyerHomeDiscoveryViewModelHash();
+
+  @$internal
+  @override
+  BuyerHomeDiscoveryViewModel create() => BuyerHomeDiscoveryViewModel();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BuyerHomeDiscoveryViewModelState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BuyerHomeDiscoveryViewModelState>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$buyerHomeDiscoveryViewModelHash() =>
+    r'5f10dfa5afe7d6df3b2bbfe1ce073ceaa4d615e7';
+
+abstract class _$BuyerHomeDiscoveryViewModel
+    extends $Notifier<BuyerHomeDiscoveryViewModelState> {
+  BuyerHomeDiscoveryViewModelState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<
+              BuyerHomeDiscoveryViewModelState,
+              BuyerHomeDiscoveryViewModelState
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                BuyerHomeDiscoveryViewModelState,
+                BuyerHomeDiscoveryViewModelState
+              >,
+              BuyerHomeDiscoveryViewModelState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
